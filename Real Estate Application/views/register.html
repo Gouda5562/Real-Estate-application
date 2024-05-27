@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Register</title>
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+  <header>
+    <nav>
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="/login.html">Login</a></li>
+        <li><a href="/register.html">Register</a></li>
+      </ul>
+    </nav>
+  </header>
+  <main>
+    <h1>Register</h1>
+    <form id="registerForm">
+      <label for="firstName">First Name:</label>
+      <input type="text" id="firstName" name="firstName" required>
+      <label for="lastName">Last Name:</label>
+      <input type="text" id="lastName" name="lastName" required>
+      <label for="email">Email:</label>
+      <input type="email" id="email" name="email" required>
+      <label for="password">Password:</label>
+      <input type="password" id="password" name="password" required>
+      <label for="phone">Phone:</label>
+      <input type="text" id="phone" name="phone" required>
+      <label for="role">Role:</label>
+      <select id="role" name="role" required>
+        <option value="buyer">Buyer</option>
+        <option value="seller">Seller</option>
+      </select>
+      <button type="submit">Register</button>
+    </form>
+  </main>
+  <script src="js/scripts.js"></script>
+  <script>
+    document.getElementById('registerForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const firstName = e.target.firstName.value;
+      const lastName = e.target.lastName.value;
+      const email = e.target.email.value;
+      const password = e.target.password.value;
+      const phone = e.target.phone.value;
+      const role = e.target.role.value;
+      
+      const res = await fetch('/api/auth/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ firstName, lastName, email, password, phone, role })
+      });
+
+      const data = await res.json();
+      if (res.status === 201) {
+        localStorage.setItem('token', data.token);
+        window.location.href = '/dashboard.html';
+      } else {
+        alert(data.message);
+      }
+    });
+  </script>
+</body>
+</html>

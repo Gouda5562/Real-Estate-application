@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Property Details</title>
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+  <header>
+    <nav>
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="/dashboard.html">Dashboard</a></li>
+      </ul>
+    </nav>
+  </header>
+  <main>
+    <h1>Property Details</h1>
+    <div id="propertyDetails"></div>
+  </main>
+  <script src="js/scripts.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', async () => {
+      const params = new URLSearchParams(window.location.search);
+      const propertyId = params.get('id');
+      const token = localStorage.getItem('token');
+
+      const res = await fetch(`/api/properties/${propertyId}`, {
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+
+      const property = await res.json();
+      const propertyDetails = document.getElementById('propertyDetails');
+
+      propertyDetails.innerHTML = `
+        <h2>${property.title}</h2>
+        <p>${property.description}</p>
+        <p>Location: ${property.location}</p>
+        <p>Area: ${property.area} sq.ft.</p>
+        <p>Bedrooms: ${property.bedrooms}</p>
+        <p>Bathrooms: ${property.bathrooms}</p>
+        <p>Nearby: ${property.nearby}</p>
+        <p>Price: $${property.price}</p>
+        <p>Seller: ${property.seller.firstName} ${property.seller.lastName}</p>
+        <p>Email: ${property.seller.email}</p>
+        <p>Phone: ${property.seller.phone}</p>
+      `;
+    });
+  </script>
+</body>
+</html>
